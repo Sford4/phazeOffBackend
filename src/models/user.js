@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
 	userName: String,
 	email: String,
-	boards: [
+	categories: [
 		{
 			type: Schema.Types.ObjectId,
-			ref: 'board'
+			ref: 'category'
 		}
 	]
 });

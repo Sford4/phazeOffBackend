@@ -39,8 +39,7 @@ module.exports = {
 		}),
 
 		userOptionalSchema: Joi.object().keys({
-			firstName: Joi.string(),
-			lastName: Joi.string(),
+			userName: Joi.string(),
 			email: Joi.string().email()
 		}),
 
@@ -50,9 +49,12 @@ module.exports = {
 		}),
 
 		gameSchema: Joi.object().keys({
-			board: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-			organizer: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-			players: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).required()
+			categories: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).required(),
+			players: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).required(),
+			type: Joi.object().keys({
+				title: Joi.string().required(),
+				limit: Joi.number().required()
+			})
 		}),
 
 		idSchema: Joi.object().keys({

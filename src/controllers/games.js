@@ -11,15 +11,14 @@ module.exports = {
 	},
 
 	newGame: async (req, res, next) => {
-		const board = await Board.findById(req.value.body.board);
-		const organizer = await User.findById(req.value.body.organizer);
-		for (let i = 0; i < board.squares.length; i++) {
-			board.squares[i] = { text: board.squares[i], selected: false };
+		let cards = [];
+		for (let i = 0; i < req.value.body.categories.length; i++) {
+			let categoryCards = await Category.findById(req.value.body.categories[i]);
+			cards.push(categoryCards.cards);
 		}
 		const newGame = req.value.body;
-		delete newGame.board;
-		newGame.board = board;
-		newGame.organizer = organizer;
+		delete newGame.cards;
+		newGame.cards = cards;
 		let addCode = shortid.generate();
 		newGame.addCode = addCode.substring(0, addCode.length - 3);
 		newGame.winner = null;

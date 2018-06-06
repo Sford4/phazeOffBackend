@@ -2,15 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const GameSchema = new Schema({
-	addCode: String,
+	cards: [String],
 	players: [String],
-	board: {
-		type: Schema.Types.ObjectId,
-		ref: 'board'
-	},
-	organizer: {
-		type: Schema.Types.ObjectId,
-		ref: 'user'
+	type: {
+		title: String,
+		limit: Number
 	},
 	winner: String
 });
