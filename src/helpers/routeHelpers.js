@@ -44,31 +44,9 @@ module.exports = {
 			email: Joi.string().email()
 		}),
 
-		userCarSchema: Joi.object().keys({
-			make: Joi.string().required(),
-			model: Joi.string().required(),
-			year: Joi.number().required()
-		}),
-
-		boardSchema: Joi.object().keys({
+		categorySchema: Joi.object().keys({
 			title: Joi.string().required(),
-			keywords: Joi.array().items(Joi.string()).required(),
-			squares: Joi.array().items(Joi.string()).required(),
-			creator: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
-		}),
-
-		putBoardSchema: Joi.object().keys({
-			title: Joi.string().required(),
-			keywords: Joi.array().items(Joi.string()).required(),
-			squares: Joi.array().items(Joi.string()).required(),
-			creator: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
-		}),
-
-		patchBoardSchema: Joi.object().keys({
-			title: Joi.string(),
-			keywords: Joi.array().items(Joi.string()),
-			squares: Joi.array().items(Joi.string()),
-			creator: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+			cards: Joi.array().items(Joi.string()).required()
 		}),
 
 		gameSchema: Joi.object().keys({

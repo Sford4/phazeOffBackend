@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const Board = require('../models/board');
+const Category = require('../models/category');
 
 module.exports = {
 	index: async (req, res, next) => {
@@ -37,25 +37,5 @@ module.exports = {
 		const user = await User.findByIdAndRemove(req.value.params.id);
 
 		res.status(200).json({ success: true });
-	},
-
-	getUserBoards: async (req, res, next) => {
-		const user = await User.findById(req.value.params.id).populate({
-			path: 'boards',
-			ref: 'board',
-			select: 'model make year -_id'
-		});
-
-		res.status(200).json(user.cars);
-	},
-
-	newUserBoard: async (req, res, next) => {
-		const newBoard = new Board(req.value.body);
-		// await newBoard.save();
-		const user = await User.findByIdAndUpdate(req.value.params.id, {
-			$push: { boards: newBoard }
-		});
-
-		res.status(200).json(newBoard);
 	}
 };

@@ -16,11 +16,11 @@ mongoose.connect('mongodb://localhost:27017/codeworkr-rest-api', () => {
 });
 
 const users = require('./routes/users');
-const boards = require('./routes/boards');
+const categories = require('./routes/categories');
 const games = require('./routes/games');
 
 try {
-	const port = process.env.PORT || 8000;
+	const port = process.env.PORT || 4000;
 	server.listen(port);
 	console.log(`Listening on port: ${port}`);
 } catch (err) {
@@ -32,7 +32,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 // Routes
-app.use('/boards', boards);
+app.use('/categories', categories);
 app.use('/users', users);
 app.use('/games', games);
 

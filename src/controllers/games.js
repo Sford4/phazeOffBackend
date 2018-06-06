@@ -1,4 +1,4 @@
-const Board = require('../models/board');
+const Category = require('../models/category');
 const User = require('../models/user');
 const Game = require('../models/game');
 const shortid = require('shortid');
