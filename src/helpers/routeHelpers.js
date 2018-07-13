@@ -50,11 +50,19 @@ module.exports = {
 
 		gameSchema: Joi.object().keys({
 			categories: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).required(),
-			players: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).required(),
-			type: Joi.object().keys({
+			players: Joi.array()
+				.items(
+					Joi.object().keys({
+						avatar: Joi.string().required(),
+						username: Joi.string().required()
+					})
+				)
+				.required(),
+			gameType: Joi.object().keys({
 				title: Joi.string().required(),
-				limit: Joi.number().required()
-			})
+				limit: Joi.string().required()
+			}),
+			organizer: Joi.string().required()
 		}),
 
 		idSchema: Joi.object().keys({

@@ -3,12 +3,13 @@ const Schema = mongoose.Schema;
 
 const GameSchema = new Schema({
 	cards: [String],
-	players: [String],
-	type: {
+	addCode: String,
+	players: [{ avatar: String, username: String }],
+	gameType: {
 		title: String,
-		limit: Number
+		limit: String
 	},
-	winner: String
+	organizer: String
 });
 
 const Game = mongoose.model('game', GameSchema);

@@ -4,7 +4,9 @@ const User = require('../models/user');
 module.exports = {
 	index: async (req, res, next) => {
 		const categories = await Category.find({});
-
+		for (let i = 0; i < categories.length; i++) {
+			categories[i].cards = null;
+		}
 		res.status(200).json(categories);
 	},
 
