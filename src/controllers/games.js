@@ -10,12 +10,17 @@ module.exports = {
 		res.status(200).json(games);
 	},
 
+	deleteAllGames: async (req, res, next) => {
+		const games = await Game.remove({});
+		res.status(200).json('All games deleted');
+	},
+
 	newGame: async (req, res, next) => {
 		let categoriesArr = [];
 		let cards = [];
 		for (let i = 0; i < req.value.body.categories.length; i++) {
 			let categoryCards = await Category.findById(req.value.body.categories[i]);
-			cards.push(categoryCards.cards);
+			Array.prototype.push.apply(cards, categoryCards.cards);
 			categoriesArr.push(categoryCards.title);
 		}
 		const newGame = req.value.body;
@@ -30,6 +35,7 @@ module.exports = {
 			addCode: game.addCode,
 			_id: game._id,
 			players: game.players,
+			organizer: game.organizer,
 			categories: categoriesArr
 		});
 	},

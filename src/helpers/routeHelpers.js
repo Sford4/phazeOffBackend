@@ -54,7 +54,9 @@ module.exports = {
 				.items(
 					Joi.object().keys({
 						avatar: Joi.string().required(),
-						username: Joi.string().required()
+						username: Joi.string().required(),
+						cardsWon: Joi.array().required(),
+						cardsInPlay: Joi.array().required()
 					})
 				)
 				.required(),

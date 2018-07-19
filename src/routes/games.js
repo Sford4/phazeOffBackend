@@ -3,7 +3,11 @@ const router = require('express-promise-router')();
 const gamesController = require('../controllers/games');
 const { validateParam, validateBody, schemas } = require('../helpers/routeHelpers');
 
-router.route('/').get(gamesController.index).post(validateBody(schemas.gameSchema), gamesController.newGame);
+router
+	.route('/')
+	.get(gamesController.index)
+	.post(validateBody(schemas.gameSchema), gamesController.newGame)
+	.delete(gamesController.deleteAllGames);
 
 router
 	.route('/:id')
