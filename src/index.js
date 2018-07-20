@@ -61,6 +61,29 @@ app.use((err, req, res, next) => {
 	console.error(err);
 });
 
+var checkForWinner = game => {
+	console.log('checkForWinner triggered');
+	for (let i = 0; i < game.players.length; i++) {
+		if (game.players[i].cardsWon.length >= game.gameType.limit) {
+			return game.players[i];
+		}
+	}
+	return null;
+};
+
+var startTimer = (addCode, gameType) => {
+	let countdown = gameType.limit * 60;
+	setInterval(function() {
+		countdown--;
+		if (countdown > 0) {
+			io.in(addCode).emit('timer', countdown);
+		} else {
+			console.log('OUT OF TIME');
+			io.in(addCode).emit('outOfTime');
+		}
+	}, 1000);
+};
+
 // WEB SOCKET STUFF
 const Game = require('./models/game');
 io.listen(server);
@@ -68,7 +91,7 @@ io.on('connection', socket => {
 	console.log('a user connected');
 
 	socket.on('join', async (addCode, user, gameId) => {
-		// console.log('join: ', { addCode: addCode, username: user.username, gameId: gameId });
+		console.log('join: ', { addCode: addCode, username: user, gameId: gameId });
 		socket.join(addCode, () => {
 			console.log('joined room', addCode);
 		});
@@ -85,14 +108,31 @@ io.on('connection', socket => {
 				cardsWon: [],
 				cardsInPlay: []
 			};
+			console.log('had to add player', newUser);
 			game.players.push(newUser);
 			await game.save();
 			io.in(addCode).emit('playerJoined', game);
 		}
 	});
-	socket.on('startGame', addCode => {
+	socket.on('startGame', (addCode, gameType) => {
 		// console.log('start game triggered', addCode);
 		io.in(addCode).emit('startGame');
+		if (gameType.title === 'time') {
+			startTimer(addCode, gameType);
+		}
+	});
+	socket.on('leave', async (addCode, user, gameId) => {
+		// console.log('start game triggered', addCode);
+		socket.leave(addCode, () => {
+			console.log('left room', addCode);
+		});
+		let game = await Game.findById(gameId);
+		let players = game.players.filter(player => {
+			return player.username !== user.username;
+		});
+		game.players = players;
+		await game.save();
+		io.in(addCode).emit('playerLeft', game);
 	});
 
 	socket.on('drawCard', async (player, addCode, gameId) => {
@@ -187,6 +227,15 @@ io.on('connection', socket => {
 		});
 		// UPDATE BACKEND
 		await game.save();
-		io.in(addCode).emit('phazeOffResolved', { losers, winner, game });
+		if (game.gameType.title === 'points') {
+			let ultimateWinner = checkForWinner(game);
+			if (ultimateWinner) {
+				io.in(addCode).emit('gameWon', { ultimateWinner });
+			} else {
+				io.in(addCode).emit('phazeOffResolved', { losers, winner, game });
+			}
+		} else {
+			io.in(addCode).emit('phazeOffResolved', { losers, winner, game });
+		}
 	});
 });

@@ -9,6 +9,8 @@ router
 	.post(validateBody(schemas.gameSchema), gamesController.newGame)
 	.delete(gamesController.deleteAllGames);
 
+router.route('/search').post(gamesController.searchGames);
+
 router
 	.route('/:id')
 	.get(validateParam(schemas.idSchema, 'id'), gamesController.getGame)
